@@ -41,7 +41,7 @@ const BloodRequests = () => {
   const handleDelete = (id) => {
     if (window.confirm("Ma hubtaa inaad tirtirayso codsigan?")) {
       axios
-        .delete(`http://localhost:3000/remove/${id}`)
+        .delete(`http://localhost:3000/removereq/${id}`)
         .then(() => {
           alert("Codsiga waa la tirtiray");
           setRequests((prev) => prev.filter((r) => r._id !== id));
@@ -95,7 +95,7 @@ const BloodRequests = () => {
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
       <div className="flex-1 p-6 ml-60 mt-16">
-        <h1 className="text-3xl font-bold text-red-700 mb-6 border-b pb-2">
+        <h1 className="text-3xl font-bold text-red-900 mb-6 ">
           Liiska Codsiyada Dhiigga
         </h1>
 
@@ -109,7 +109,7 @@ const BloodRequests = () => {
         ) : (
           <div className="overflow-x-auto shadow-md rounded-lg bg-white">
             <table className="min-w-full table-auto text-sm">
-              <thead className="bg-red-200 text-gray-700">
+              <thead className="bg-red-700 text-white">
                 <tr>
                   <th className="p-3 text-left">Magaca Bukaanka</th>
                   <th className="p-3 text-left">Isbitaalka</th>

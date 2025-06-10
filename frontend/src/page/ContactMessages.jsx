@@ -85,7 +85,7 @@ const fetchMessages = async () => {
       ) : (
         <ul className="space-y-4">
           {messages.map((msg) => (
-            <li key={msg._id} className="border p-4 rounded shadow">
+            <li key={msg._id} className=" p-4 rounded shadow-inner bg-red-30">
               {editingId === msg._id ? (
                 <form onSubmit={handleEditSubmit} className="space-y-3">
                   <input

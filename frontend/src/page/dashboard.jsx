@@ -22,7 +22,7 @@ const dashboard = () => {
       <Sidebar />
 
       <div className="ml-64 p-6 w-full min-h-screen bg-gray-100">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 mt-20">Overview</h2>
+        <h2 className="text-3xl font-bold text-red-600 mb-6 mt-20">Overview</h2>
 
         {/* Top Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">

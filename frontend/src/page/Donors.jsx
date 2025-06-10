@@ -37,13 +37,14 @@ function Donors() {
   const handleDelete = (id) => {
     if (window.confirm("Ma hubtaa inaad tirtirayso deeq bixiyahan?")) {
       axios
-        .delete(`http://localhost:3000/remove/${id}`)
+        .delete(`http://localhost:3000/removedonateModel/${id}`)
         .then(() => {
           setDonors((prev) => prev.filter((donor) => donor._id !== id));
         })
         .catch((err) => console.error("Delete error:", err));
     }
   };
+  
 
   // Open edit modal and set form data
   const handleEdit = (id) => {

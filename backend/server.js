@@ -37,12 +37,22 @@ app.put("/update/:id", async (req, res)=>{
         res.send("data has been updated")
     }
 })
+app.delete("/removedonateModel/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await donateModel.findByIdAndDelete(id);
+    res.json({ message: "Deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Delete failed", error: error.message });
+  }
+});
 app.put("/updateRequest/:id", async (req, res)=>{
     const updateData= await requastModel.updateOne( {_id: req.params.id}, {$set: req.body})
     if(updateData){
         res.send("data has been updated")
     }
 })
+
 //Requas api 
 app.post("/createRequest", async (req,res)=>{
     const newData=new requastModel(req.body)
@@ -58,7 +68,7 @@ app.get("/getRequests", async (req, res)=>{
     res.send(getdata)
 })
 //reomve api
-app.delete("/remove/:id", async (req, res) => {
+app.delete("/removereq/:id", async (req, res) => {
   try {
     const { id } = req.params;
     await requastModel.findByIdAndDelete(id);
