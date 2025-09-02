@@ -1,75 +1,152 @@
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+import axios from "axios";
+import { FaUser, FaEnvelope, FaHandHoldingMedical } from "react-icons/fa";
 
-// Mock Data
-const donationData = [
-  { month: "Jan", donations: 10 },
-  { month: "Feb", donations: 25 },
-  { month: "Mar", donations: 18 },
-  { month: "Apr", donations: 30 },
-  { month: "May", donations: 22 },
-  { month: "Jun", donations: 27 },
-];
-const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    navigate("/login");
-  };
+const Dashboard = () => {
+  const [donors, setDonors] = useState([]);
+  const [requests, setRequests] = useState([]);
+  const [messages, setMessages] = useState([]);
 
-const dashboard = () => {
+  // Chart data summary
+  const chartData = [
+    { name: "Donors", value: donors.length },
+    { name: "Requests", value: requests.length },
+    { name: "Messages", value: messages.length },
+  ];
+
+  useEffect(() => {
+    const fetchDonors = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:3000/get");
+        setDonors(data);
+      } catch (error) {
+        console.error("Error fetching donors:", error);
+      }
+    };
+
+    const fetchRequests = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:3000/getRequests");
+        setRequests(data);
+      } catch (error) {
+        console.error("Error fetching requests:", error);
+      }
+    };
+
+    const fetchMessages = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:3000/getContact");
+        setMessages(data);
+      } catch (error) {
+        console.error("Error fetching contact messages:", error);
+      }
+    };
+
+    fetchDonors();
+    fetchRequests();
+    fetchMessages();
+  }, []);
+
   return (
     <div className="flex">
       <Sidebar />
 
-      <div className="ml-64 p-6 w-full min-h-screen bg-gray-100">
-        <h2 className="text-3xl font-bold text-red-600 mb-6 mt-20">Overview</h2>
+      <main className="ml-64 p-6 w-full min-h-screen bg-gradient-to-br from-gray-100 to-red-50">
+        <h2 className="text-3xl font-bold text-red-600 mb-8 mt-20 text-center">
+          Admin Dashboard Overview
+        </h2>
 
-        {/* Top Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-all duration-300">
-            <h3 className="text-lg font-semibold text-gray-600">Total Donors</h3>
-            <p className="text-4xl font-bold text-red-600 mt-2">120</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-all duration-300">
-            <h3 className="text-lg font-semibold text-gray-600">Blood Requests</h3>
-            <p className="text-4xl font-bold text-red-600 mt-2">35</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-all duration-300">
-            <h3 className="text-lg font-semibold text-gray-600">Pending Approvals</h3>
-            <p className="text-4xl font-bold text-red-600 mt-2">8</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition-all duration-300">
-            <h3 className="text-lg font-semibold text-gray-600">Active Users</h3>
-            <p className="text-4xl font-bold text-red-600 mt-2">50</p>
-          </div>
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10 max-w-5xl mx-auto">
+          {[
+            {
+              title: "Total Donors",
+              count: donors.length,
+              icon: <FaUser className="text-red-600 text-3xl mt-5" />,
+              border: "border-red-500",
+              color: "text-red-600",
+            },
+            {
+              title: "Total Blood Requests",
+              count: requests.length,
+              icon: <FaHandHoldingMedical className="text-green-600 text-3xl mt-5" />,
+              border: "border-green-500",
+              color: "text-yellow-600",
+            },
+            {
+              title: "Contact Messages",
+              count: messages.length,
+              icon: <FaEnvelope className="text-blue-600 text-3xl mt-5" />,
+              border: "border-blue-500",
+              color: "text-blue-600",
+            },
+          ].map(({ title, count, icon, border, color }) => (
+            <div
+              key={title}
+              className={`bg-white p-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex justify-between items-center border-t-4 ${border}`}
+            >
+              <div>
+                <h3 className="text-md font-semibold text-gray-600">{title}</h3>
+                <p className={`text-3xl font-bold mt-1 ${color}`}>{count}</p>
+              </div>
+              <div>{icon}</div>
+            </div>
+          ))}
         </div>
 
-        {/* Graph Section */}
-       <div className="bg-white p-4 rounded-lg shadow">
-  <h3 className="text-lg font-semibold text-gray-700 mb-3">Monthly Donations</h3>
-  <ResponsiveContainer width="100%" height={220}>
-    <BarChart data={donationData} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
-      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-      <XAxis dataKey="month" fontSize={12} stroke="#6b7280" />
-      <YAxis fontSize={12} stroke="#6b7280" />
-      <Tooltip 
-        contentStyle={{ backgroundColor: "#fef2f2", borderColor: "#fecaca" }}
-        itemStyle={{ color: "#b91c1c", fontSize: 12 }}
+       {/* Bar Chart */}
+<section className="bg-gradient-to-br from-white to-red-50 rounded-2xl shadow-xl mx-auto  border border-red-200 max-w-5xl">
+  <h3 className="text-2xl font-bold text-red-700 mb-6 text-center tracking-wide uppercase">
+   SomB Giver Statistics
+  </h3>
+
+  <ResponsiveContainer width="100%" height={250}>
+    <BarChart
+      data={chartData}
+      margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
+    >
+      <CartesianGrid strokeDasharray="4 4" stroke="#fecaca" />
+      <XAxis dataKey="name" stroke="#b91c1c" tick={{ fontSize: 14 }} />
+      <YAxis stroke="#b91c1c" tick={{ fontSize: 14 }} />
+      <Tooltip
+        contentStyle={{
+          backgroundColor: "#fef2f2",
+          borderColor: "#fecaca",
+          borderRadius: "10px",
+          fontSize: "14px",
+        }}
+        itemStyle={{ color: "#b91c1c", fontWeight: "bold" }}
+        cursor={{ fill: "#fee2e2" }}
       />
       <Bar
-        dataKey="donations"
+        dataKey="value"
         fill="#dc2626"
-        radius={[6, 6, 0, 0]}
-        barSize={30}
-        label={{ position: 'top', fill: '#991b1b', fontSize: 10 }}
+        radius={[10, 10, 0, 0]}
+        barSize={45}
+        label={{
+          position: "top",
+          fill: "#991b1b",
+          fontSize: 13,
+          fontWeight: 600,
+        }}
       />
     </BarChart>
   </ResponsiveContainer>
-</div>
+</section>
 
-      </div>
+      </main>
     </div>
   );
 };
 
-export default dashboard;
+export default Dashboard;

@@ -10,14 +10,16 @@ import Request from "./page/Request";
 import Donors from "./page/Donors";
 import ExploreDonation from "./page/ExploreDonation";
 import SuccessStories from "./page/SuccessStories";
-import NewsPage from "./page/NewsPage";
 import Contact from "./page/Contact";
-import Register from "./page/Register";
 import DashboardHome from "./page/dashboard";
 import Login from "./page/LoginDashboard";
 import BloodRequests from "./page/BloodRequests";
 import ContactMessages from "./page/ContactMessages";
 import SettingsPage from "./page/SettingsPage";
+import DonateBloodGallery from "./page/Gellery";
+import Reports from "./page/Reports";
+import RequestReports from "./page/RequestReports";
+import RegisterForm from "./page/RegisterForm";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -35,15 +37,15 @@ function App() {
         <Route path="/request" element={<Request />} />
         <Route path="/ExploreDonation" element={<ExploreDonation />} />
         <Route path="/SuccessStories" element={<SuccessStories />} />
-        <Route path="/NewsPage" element={<NewsPage />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegisterForm />} />
         <Route path="/footer" element={<Footer />} />
         <Route path="/Sidebar" element={<Sidebar />} />
         <Route path="/donors" element={<Donors />} />
         <Route path="/blood-requests" element={<BloodRequests />} />
         <Route path="/contact-form" element={<ContactMessages />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/DonateBloodGallery" element={<DonateBloodGallery />} />
         
 
         {/* Login Page */}
@@ -69,7 +71,12 @@ function App() {
             )
           }
         />
+          <Route path="/report" element={<Reports />} />
+          <Route path="/requestReports" element={<RequestReports />} />
+
       </Routes>
+      
+
 
     
     </>

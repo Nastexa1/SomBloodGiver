@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaTrash, FaEdit } from "react-icons/fa";
+import {
+  FaTrash, FaEdit, FaTint, FaHospital, FaPhone, FaCity,
+  FaRegCalendarAlt, FaUserMd, FaRegStickyNote, FaDownload
+} from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 
 const BloodRequests = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Modal & form state
   const [isEditing, setIsEditing] = useState(false);
+
   const [formData, setFormData] = useState({
     patientName: "",
     hospitalName: "",
@@ -17,7 +19,7 @@ const BloodRequests = () => {
     city: "",
     why: "",
     date: "",
-    _id: ""
+    _id: "",
   });
 
   useEffect(() => {
@@ -39,20 +41,14 @@ const BloodRequests = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Ma hubtaa inaad tirtirayso codsigan?")) {
-      axios
-        .delete(`http://localhost:3000/removereq/${id}`)
-        .then(() => {
-          alert("Codsiga waa la tirtiray");
-          setRequests((prev) => prev.filter((r) => r._id !== id));
-        })
-        .catch((error) => {
-          console.error("Error deleting request:", error);
-        });
+    if (window.confirm("Are you sure you want to delete this request?")) {
+      axios.delete(`http://localhost:3000/removereq/${id}`).then(() => {
+        alert("Request deleted successfully");
+        setRequests((prev) => prev.filter((r) => r._id !== id));
+      });
     }
   };
 
-  // Open modal & set form data for editing
   const handleEdit = (id) => {
     const selectedRequest = requests.find((r) => r._id === id);
     if (selectedRequest) {
@@ -61,12 +57,10 @@ const BloodRequests = () => {
     }
   };
 
-  // Close modal without saving
   const handleCancel = () => {
     setIsEditing(false);
   };
 
-  // Update form data on input change
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -74,182 +68,110 @@ const BloodRequests = () => {
     }));
   };
 
-  // Send updated data to backend and update state
   const handleUpdate = () => {
-    axios
-      .put(`http://localhost:3000/updateRequest/${formData._id}`, formData)
-      .then((res) => {
-        alert("Codsiga waa la cusbooneysiiyay");
-        setRequests((prev) =>
-          prev.map((r) => (r._id === formData._id ? formData : r))
-        );
-        setIsEditing(false);
-      })
-      .catch((err) => {
-        console.error("Error updating request:", err);
-        alert("Waxaa dhacay khalad markaa la cusbooneysiinayay");
-      });
+    axios.put(`http://localhost:3000/updateRequest/${formData._id}`, formData).then(() => {
+      alert("Request updated successfully");
+      setRequests((prev) =>
+        prev.map((r) => (r._id === formData._id ? formData : r))
+      );
+      setIsEditing(false);
+    });
   };
 
+ 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       <div className="flex-1 p-6 ml-60 mt-16">
-        <h1 className="text-3xl font-bold text-red-900 mb-6 ">
-          Liiska Codsiyada Dhiigga
-        </h1>
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-rose-700">SomB Giver</h1>
+            <p className="text-slate-600">All recorded Som Giver requests.</p>
+          </div>
+         
+        </div>
 
         {loading ? (
           <div className="text-center mt-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-red-600 border-solid mx-auto"></div>
-            <p className="mt-4 text-gray-600">Requests are loading...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-rose-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading requests...</p>
           </div>
         ) : requests.length === 0 ? (
-          <p className="text-gray-600">Ma jiraan codsiyo dhiig oo la diiwaangeliyay.</p>
+          <p className="text-gray-600">No blood requests found.</p>
         ) : (
-          <div className="overflow-x-auto shadow-md rounded-lg bg-white">
-            <table className="min-w-full table-auto text-sm">
-              <thead className="bg-red-700 text-white">
-                <tr>
-                  <th className="p-3 text-left">Magaca Bukaanka</th>
-                  <th className="p-3 text-left">Isbitaalka</th>
-                  <th className="p-3 text-left">Taleefan</th>
-                  <th className="p-3 text-left">Nooca Dhiigga</th>
-                  <th className="p-3 text-left">Magaalada</th>
-                  <th className="p-3 text-left">Sababta</th>
-                  <th className="p-3 text-left">Taariikhda</th>
-                  <th className="p-3 text-center">Ficil</th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-800">
-                {requests.map((req) => (
-                  <tr key={req._id} className="border-b hover:bg-red-50">
-                    <td className="p-3">{req.patientName}</td>
-                    <td className="p-3">{req.hospitalName}</td>
-                    <td className="p-3">{req.phone}</td>
-                    <td className="p-3">{req.blood}</td>
-                    <td className="p-3">{req.city}</td>
-                    <td className="p-3">{req.why}</td>
-                    <td className="p-3">{req.date}</td>
-                    <td className="p-3 flex justify-center space-x-3">
-                      <button
-                        onClick={() => handleEdit(req._id)}
-                        className="text-blue-600 hover:text-blue-800"
-                        title="Edit"
-                      >
-                        <FaEdit size={18} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(req._id)}
-                        className="text-red-600 hover:text-red-800"
-                        title="Delete"
-                      >
-                        <FaTrash size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {requests.map((req) => (
+              <div
+                key={req._id}
+                className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition border border-gray-200"
+              >
+                <h2 className="text-xl font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <FaUserMd className="text-rose-600" /> {req.patientName}
+                </h2>
+
+                <ul className="space-y-1 text-gray-700 text-sm">
+                  <li className="flex items-center gap-2">
+                    <FaHospital className="text-gray-500" />
+                    <span><strong>Hospital:</strong> {req.hospitalName}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaPhone className="text-gray-500" />
+                    <span><strong>Phone:</strong> {req.phone}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaTint className="text-red-600" />
+                    <span><strong>Blood Type:</strong> {req.blood}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaCity className="text-gray-500" />
+                    <span><strong>City:</strong> {req.city}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaRegStickyNote className="text-gray-500" />
+                    <span><strong>Reason:</strong> {req.why}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <FaRegCalendarAlt className="text-gray-500" />
+                    <span><strong>Date:</strong> {req.date}</span>
+                  </li>
+                </ul>
+
+                <div className="flex justify-end gap-4 mt-4 border-t pt-3">
+                  <button
+                    onClick={() => handleEdit(req._id)}
+                    className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm"
+                  >
+                    <FaEdit /> Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(req._id)}
+                    className="flex items-center gap-1 text-red-600 hover:text-red-800 text-sm"
+                  >
+                    <FaTrash /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Modal for editing */}
+        {/* Modal Edit Form */}
         {isEditing && (
-          <div className="fixed inset-0 bg-red-200 bg-opacity-70 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-              <h2 className="text-xl font-semibold mb-4 text-red-700">Edit Codsiga</h2>
-
-              <label className="block mb-2">
-                Magaca Bukaanka:
-                <input
-                  type="text"
-                  name="patientName"
-                  value={formData.patientName}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded mt-1"
-                />
-              </label>
-
-              <label className="block mb-2">
-                Isbitaalka:
-                <input
-                  type="text"
-                  name="hospitalName"
-                  value={formData.hospitalName}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded mt-1"
-                />
-              </label>
-
-              <label className="block mb-2">
-                Taleefan:
-                <input
-                  type="text"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded mt-1"
-                />
-              </label>
-
-              <label className="block mb-2">
-                Nooca Dhiigga:
-                <input
-                  type="text"
-                  name="blood"
-                  value={formData.blood}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded mt-1"
-                />
-              </label>
-
-              <label className="block mb-2">
-                Magaalada:
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded mt-1"
-                />
-              </label>
-
-              <label className="block mb-2">
-                Sababta:
-                <input
-                  type="text"
-                  name="why"
-                  value={formData.why}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded mt-1"
-                />
-              </label>
-
-              <label className="block mb-4">
-                Taariikhda:
-                <input
-                  type="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  className="w-full border p-2 rounded mt-1"
-                />
-              </label>
-
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={handleCancel}
-                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleUpdate}
-                  className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
-                >
-                  Update
-                </button>
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50 px-4">
+            <div className="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl space-y-4">
+              <h2 className="text-2xl font-bold text-center text-rose-700">Edit Blood Request</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input type="text" name="patientName" placeholder="Patient Name" value={formData.patientName} onChange={handleChange} className="border rounded p-2" />
+                <input type="text" name="hospitalName" placeholder="Hospital" value={formData.hospitalName} onChange={handleChange} className="border rounded p-2" />
+                <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} className="border rounded p-2" />
+                <input type="text" name="blood" placeholder="Blood Type" value={formData.blood} onChange={handleChange} className="border rounded p-2" />
+                <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} className="border rounded p-2" />
+                <input type="text" name="why" placeholder="Reason" value={formData.why} onChange={handleChange} className="border rounded p-2" />
+                <input type="date" name="date" value={formData.date} onChange={handleChange} className="border rounded p-2 col-span-full" />
+              </div>
+              <div className="flex justify-end gap-4 pt-4 border-t">
+                <button onClick={handleCancel} className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800">Cancel</button>
+                <button onClick={handleUpdate} className="px-4 py-2 rounded bg-rose-600 text-white hover:bg-rose-700">Update</button>
               </div>
             </div>
           </div>

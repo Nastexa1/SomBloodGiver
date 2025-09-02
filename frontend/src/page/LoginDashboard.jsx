@@ -1,32 +1,62 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function LoginDashboard({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMsg("");
 
-    if (email === "admin@gmail.com" && password === "568983") {
-      localStorage.setItem("token", "dummy_token");
-      setIsAuthenticated(true);
-      navigate("/dashboard");
-    } else {
-      alert("Invalid email or password");
+    try {
+      const response = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("admin", JSON.stringify(data.user));
+        setIsAuthenticated(true);
+        navigate("/dashboard");
+      } else {
+        setErrorMsg(data.message || "Invalid credentials");
+      }
+    } catch (error) {
+      setErrorMsg("Server error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-red-50">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-100 via-white to-red-200 px-4">
       <form
         onSubmit={handleLogin}
-        className="bg-white p-8 shadow-lg w-96 border-t-8 border-red-600 rounded-3xl"
+        className="bg-white p-8 shadow-2xl rounded-2xl w-full max-w-md border-t-8 border-red-600"
       >
-        <h2 className="text-3xl mb-6 font-bold text-center text-red-700">
-          🔐 Admin Login
-        </h2>
+        <div className="text-center mb-6">
+          <h2 className="text-3xl font-bold text-red-700 flex items-center justify-center gap-2">
+            <span className="animate-pulse">🔐</span> Admin Login
+          </h2>
+          <p className="text-gray-500 mt-1 text-sm">
+            Welcome back! Please sign in
+          </p>
+        </div>
+
+        {errorMsg && (
+          <div className="mb-4 bg-red-100 text-red-700 p-3 rounded-lg text-sm">
+            {errorMsg}
+          </div>
+        )}
 
         <input
           type="email"
@@ -34,6 +64,7 @@ function LoginDashboard({ setIsAuthenticated }) {
           className="w-full mb-4 p-3 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
@@ -42,14 +73,32 @@ function LoginDashboard({ setIsAuthenticated }) {
           className="w-full mb-6 p-3 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
         <button
           type="submit"
-          className="w-full bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg font-semibold"
+          className="w-full bg-red-600 hover:bg-red-700 transition-all duration-200 text-white p-3 rounded-lg font-semibold flex items-center justify-center"
+          disabled={loading}
         >
-          Login
+          {loading ? (
+            <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-5 h-5 mr-2"></span>
+          ) : null}
+          {loading ? "Logging in..." : "Login"}
         </button>
+
+        {/* Register Link */}
+        <div className="text-center mt-6">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{" "}
+            <Link
+              to="/register"
+              className="text-red-600 font-medium hover:underline hover:text-red-800 transition"
+            >
+              Register here
+            </Link>
+          </p>
+        </div>
       </form>
     </div>
   );

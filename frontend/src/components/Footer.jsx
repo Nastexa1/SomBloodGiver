@@ -7,15 +7,15 @@ function Footer() {
       <div className="max-w-7xl px-4 grid md:grid-cols-3 gap-8">
         {/* About Section */}
         <div>
-          <h3 className="text-xl font-bold mb-3">Ku Saabsan</h3>
+          <h3 className="text-xl font-bold mb-3">About Us</h3>
           <p className="text-sm leading-relaxed">
-            Waxaan u heellanahay badbaadinta nolosha dadka u baahan dhiig. Nala shaqee si aan u gaarsiino dhiig caafimaad leh kuwa u baahan.
+            We are committed to saving the lives of people in need of blood. Join us in delivering safe and healthy blood to those who need it most.
           </p>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h3 className="text-xl font-bold mb-3">Bogagga Degdega</h3>
+          <h3 className="text-xl font-bold mb-3">Quick Links</h3>
           <ul className="space-y-2 text-sm">
             <li><a href="/" className="hover:underline">Home</a></li>
             <li><a href="/news" className="hover:underline">News</a></li>
@@ -26,8 +26,8 @@ function Footer() {
 
         {/* Contact & Social */}
         <div>
-          <h3 className="text-xl font-bold mb-3">La Xiriir</h3>
-          <p className="text-sm">Km4, Muqdisho, Soomaaliya</p>
+          <h3 className="text-xl font-bold mb-3">Contact Us</h3>
+          <p className="text-sm">Km4, Mogadishu, Somalia</p>
           <p className="text-sm">info@blooddonation.so</p>
           <div className="flex items-center gap-4 mt-4">
             <a href="#" className="text-white hover:text-gray-300"><FaFacebookF /></a>

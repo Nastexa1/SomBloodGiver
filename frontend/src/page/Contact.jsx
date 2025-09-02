@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Footer from "../components/Footer";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ function Contact() {
     e.preventDefault();
     try {
       await axios.post("http://localhost:3000/contact", formData);
-      alert("Ok tnx wan firin dona contactgaga");
+      alert("Thank you! We have received your message and will respond shortly.");
       setFormData({
         fullname: "",
         Email: "",
@@ -24,42 +25,38 @@ function Contact() {
       });
     } catch (error) {
       console.error("Submission error:", error);
-      alert("Waxaa dhacay khalad. Fadlan isku day mar kale.");
+      alert("An error occurred. Please try again later.");
     }
   };
 
-  return (
+  return <>
     <div className="pt-24 pb-16 px-4 max-w-6xl mx-auto">
-      <h2 className="text-4xl font-bold text-center text-red-600 mb-4">Nala Soo Xiriir</h2>
+      <h2 className="text-4xl font-bold text-center text-red-600 mb-4">Contact Us</h2>
       <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-        Haddii aad hayso su'aalo, tallooyin, ama aad rabto inaad nagala qaybqaadato ololeyaasha dhiig-bixinta, nala soo xiriir adigoo isticmaalaya foomka hoose.
+        If you have any questions, suggestions, or would like to participate in our blood donation campaigns, please use the form below to reach out to us.
       </p>
 
       <div className="grid md:grid-cols-2 gap-10">
-        {/* Contact Info */}
+        {/* Contact Info - Address removed */}
         <div className="space-y-6">
-          <div>
-            <h3 className="text-xl font-semibold text-red-600 mb-2">Cinwaanka</h3>
-            <p className="text-gray-700">Km4, Muqdisho, Soomaaliya</p>
-          </div>
           <div>
             <h3 className="text-xl font-semibold text-red-600 mb-2">Email</h3>
             <p className="text-gray-700">info@blooddonation.so</p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-red-600 mb-2">Telefoon</h3>
+            <h3 className="text-xl font-semibold text-red-600 mb-2">Phone</h3>
             <p className="text-gray-700">+252 61 2345678</p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-red-600 mb-2">Saacadaha Shaqada</h3>
-            <p className="text-gray-700">Axad - Khamiis: 8:00 AM – 5:00 PM</p>
+            <h3 className="text-xl font-semibold text-red-600 mb-2">Working Hours</h3>
+            <p className="text-gray-700">Sunday - Thursday: 8:00 AM – 5:00 PM</p>
           </div>
         </div>
 
         {/* Contact Form */}
         <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-xl p-8 space-y-6">
           <div>
-            <label className="block text-gray-700 mb-1">Magaca</label>
+            <label className="block text-gray-700 mb-1">Full Name</label>
             <input
               type="text"
               name="fullname"
@@ -67,7 +64,7 @@ function Contact() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-red-500"
-              placeholder="Magacaaga"
+              placeholder="Your full name"
             />
           </div>
           <div>
@@ -79,17 +76,17 @@ function Contact() {
               onChange={handleChange}
               required
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-red-500"
-              placeholder="Emailkaaga"
+              placeholder="Your email address"
             />
           </div>
           <div>
-            <label className="block text-gray-700 mb-1">Fariin</label>
+            <label className="block text-gray-700 mb-1">Message</label>
             <textarea
               name="Fariin"
               value={formData.Fariin}
               onChange={handleChange}
               required
-              placeholder="Tusaale: qalliinka degdegga ah, shil, iwm..."
+              placeholder="Write your message here..."
               className="w-full border border-gray-300 rounded px-4 py-2"
               rows={3}
             />
@@ -98,12 +95,14 @@ function Contact() {
             type="submit"
             className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded-lg"
           >
-            Dir Fariinta
+            Send Message
           </button>
         </form>
       </div>
     </div>
-  );
+
+  
+    </>
 }
 
 export default Contact;

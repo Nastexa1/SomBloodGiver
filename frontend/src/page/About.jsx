@@ -1,32 +1,44 @@
 // src/pages/About.jsx
 import React from "react";
+import image1 from "/img/Image_fx (38).jpg"; // sawirka u muuqda in uu turjumayo samatabbixin/caawinaad
 
 const About = () => {
   return (
-    <section className="pt-24 pb-16 px-4 md:px-10 bg-gray-50 min-h-screen mt-30">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold text-red-600 mb-6">About</h1>
+    <section className="pt-24 pb-16 px-4 md:px-10 bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+        
+        {/* Image */}
+        <div className="relative group">
+          <img
+            src={image1}
+            alt="Blood Donation"
+            className="w-full h-auto rounded-xl shadow-lg group-hover:scale-105 transition duration-500 ease-in-out"
+          />
+          <div className="absolute bottom-4 right-4 bg-red-600 text-white text-sm px-4 py-1 rounded-full shadow-md">
+            Save Lives ❤️
+          </div>
+        </div>
 
-        <p className="text-lg text-gray-700 mb-6">
-          BloodDonner waa nidaam casri ah oo fududeynaya isku xirka dadka u baahan dhiig iyo kuwa diyaar u ah in ay dhiig bixiyaan. Ujeeddadayadu waa badbaadinta nolosha dadka iyada oo la adeegsanayo xal teknolojiyad sare leh.
-        </p>
+        {/* Text */}
+        <div>
+          <h1 className="text-4xl font-extrabold text-red-600 mb-4">SomB Giver</h1>
 
-        <p className="text-gray-700 mb-4">
-          Barnaamijkan wuxuu awood u siinayaa isdiiwaangelinta dadka dhiig-bixiyeyaasha ah, raadinta dadka u baahan dhiig ku dhow, iyo isgaarsiinta degdega ah ee u dhaxeysa dhinacyada.
-        </p>
-
-        <ul className="list-disc ml-6 text-gray-700 space-y-2">
-          <li>Diiwaangelin fudud oo dadka dhiig-bixiyeyaasha ah.</li>
-          <li>Raadinta dadka u baahan dhiig ee ku dhow deegaankaaga.</li>
-          <li>Ogeysiisyo degdeg ah iyo xiriir toos ah.</li>
-          <li>Maamulka xogta dadka iyo taariikhda dhiig bixinta.</li>
-        </ul>
-
-        <div className="mt-10 p-6 bg-white shadow-md rounded-md">
-          <h2 className="text-2xl font-semibold text-red-500 mb-3">Himiladeena</h2>
-          <p className="text-gray-700">
-            Waxaan ku dadaaleynaa in aan abuurno bulsho u heellan badbaadinta nolosha dadka, iyada oo loo marayo dhiig bixin iskaa ah oo nidaamsan, hufan, isla markaana ammaan ah.
+          <p className="text-lg text-gray-700 mb-4 leading-relaxed">
+            <span className="font-semibold text-red-500">Som Giver</span> is a simple, fast, and reliable platform that connects blood donors with those in urgent need — turning generosity into action.
           </p>
+
+          <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-6 text-base">
+            <li>Register as a donor in seconds.</li>
+            <li>Find nearby recipients quickly.</li>
+            <li>Direct and secure communication.</li>
+          </ul>
+
+          <div className="mt-6 p-6 bg-white shadow-lg rounded-xl border-l-4 border-red-500">
+            <h2 className="text-xl font-bold text-red-600 mb-2">Our Mission</h2>
+            <p className="text-gray-700">
+              To create a caring community where every drop counts. We believe one donation can be the reason someone lives.
+            </p>
+          </div>
         </div>
       </div>
     </section>

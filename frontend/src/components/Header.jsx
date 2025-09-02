@@ -1,6 +1,7 @@
 // src/components/Header.jsx
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { FaSignInAlt } from "react-icons/fa";
 
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -13,8 +14,8 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <NavLink to="/" className="text-3xl font-bold">
-          <span className="text-red-600">Blood</span>
-          <span className="text-gray-700">Donner</span>
+          <span className="text-red-600">SomB</span>
+          <span className="text-gray-700">Giver</span>
         </NavLink>
 
         {/* Mobile menu toggle */}
@@ -33,16 +34,18 @@ function Header() {
         </button>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:flex gap-6 text-black font-medium items-center">
+        <nav className="hidden md:flex gap-6 text-black font-medium items-center ml-40">
           <NavLink to="/" className={navLinkStyle}>Home</NavLink>
           <NavLink to="/about" className={navLinkStyle}>About</NavLink>
           <NavLink to="/donate" className={navLinkStyle}>Donate</NavLink>
           <NavLink to="/request" className={navLinkStyle}>Request</NavLink>
-          <NavLink to="/ExploreDonation" className={navLinkStyle}>Explore Donation</NavLink>
-          <NavLink to="/SuccessStories" className={navLinkStyle}>Success Stories</NavLink>
-          <NavLink to="/NewsPage" className={navLinkStyle}>News</NavLink>
+          <NavLink to="/ExploreDonation" className={navLinkStyle}>ExploreDonation</NavLink>
+          <NavLink to="/SuccessStories" className={navLinkStyle}>SuccessStories</NavLink>
+          <NavLink to="/DonateBloodGallery" className={navLinkStyle}>Gallery</NavLink>
           <NavLink to="/contact" className={navLinkStyle}>Contact</NavLink>
         </nav>
+
+       
       </div>
 
       {/* Mobile Menu */}

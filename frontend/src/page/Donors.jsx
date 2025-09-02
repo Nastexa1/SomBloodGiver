@@ -1,136 +1,114 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import {
+  FaEdit,
+  FaTrash,
+  FaDownload,
+} from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function Donors() {
+const Donors = () => {
   const [donors, setDonors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Modal & form state
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    _id: "",
-    fullname: "",
-    blood: "",
-    city: "",
-    date: "",
-  });
-
-  // Fetch donors
   useEffect(() => {
     const fetchDonors = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/get");
-        setDonors(response.data);
-      } catch (error) {
-        console.error("Error fetching donors:", error);
+        const res = await axios.get("http://localhost:3000/get");
+        setDonors(res.data);
+      } catch (err) {
+        toast.error("Failed to fetch donors");
       } finally {
         setLoading(false);
       }
     };
-
     fetchDonors();
   }, []);
 
-  // Delete handler
-  const handleDelete = (id) => {
-    if (window.confirm("Ma hubtaa inaad tirtirayso deeq bixiyahan?")) {
-      axios
-        .delete(`http://localhost:3000/removedonateModel/${id}`)
-        .then(() => {
-          setDonors((prev) => prev.filter((donor) => donor._id !== id));
-        })
-        .catch((err) => console.error("Delete error:", err));
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this donor?")) {
+      try {
+        await axios.delete(`http://localhost:3000/removedonateModel/${id}`);
+        setDonors((prev) => prev.filter((donor) => donor._id !== id));
+        toast.success("Donor deleted successfully");
+      } catch {
+        toast.error("Failed to delete donor");
+      }
     }
   };
+
   
 
-  // Open edit modal and set form data
-  const handleEdit = (id) => {
-    const donorToEdit = donors.find((donor) => donor._id === id);
-    if (donorToEdit) {
-      setFormData({ ...donorToEdit });
-      setIsEditing(true);
-    }
-  };
-
-  // Close modal
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
-
-  // Handle form input change
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  // Update donor info
-  const handleUpdate = () => {
-    axios
-      .put(`http://localhost:3000/update/${formData._id}`, formData)
-      .then(() => {
-        alert("Deeq-bixiyaha waa la cusbooneysiiyay");
-        setDonors((prev) =>
-          prev.map((donor) => (donor._id === formData._id ? formData : donor))
-        );
-        setIsEditing(false);
-      })
-      .catch((err) => {
-        console.error("Update error:", err);
-        alert("Khalad ayaa dhacay markaa la cusbooneysiinayay.");
-      });
-  };
+  const filteredDonors = donors.filter((donor) =>
+    donor.fullname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    donor.blood.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    donor.city.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
+      <main className="flex-1 p-8 ml-64 mt-20">
+        <ToastContainer />
 
-      {/* Main Content */}
-      <main className="flex-1 p-8 ml-60 mt-10">
-        <h2 className="text-3xl font-bold text-red-600 mb-8">
-          🩸 Liiska Deeq-Bixiyeyaasha Dhiigga
-        </h2>
+        <h1 className="text-3xl font-bold text-red-600 mb-6 text-center">
+          🩸 Blood Donors List (Table View)
+        </h1>
 
+        {/* Search & CSV Download */}
+        <div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <input
+            type="text"
+            placeholder="Search by name, blood type or city..."
+            className="w-full sm:w-2/3 px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-red-400"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+         
+        </div>
+
+        {/* Donors Table */}
         {loading ? (
-          <p className="text-gray-600">Fadlan sug...</p>
-        ) : donors.length === 0 ? (
-          <p className="text-red-500 font-semibold">Ma jiraan deeq-bixiyeyaal.</p>
+          <p className="text-center text-gray-500">Please wait...</p>
+        ) : filteredDonors.length === 0 ? (
+          <p className="text-center text-red-500">No donors found.</p>
         ) : (
-          <div className="overflow-x-auto rounded-lg shadow-md">
-            <table className="min-w-full">
-              <thead>
-                <tr className="bg-red-500 text-white">
-                  <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Magaca</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Nooca Dhiigga</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Magaalada</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold uppercase">Taariikh</th>
-                  <th className="px-6 py-3 text-center text-sm font-semibold uppercase">Ficil</th>
+          <div className="overflow-x-auto rounded shadow">
+            <table className="min-w-full text-sm text-left text-gray-700">
+              <thead className="text-xs uppercase bg-red-600 text-white">
+                <tr>
+                  <th className="px-6 py-3">Full Name</th>
+                  <th className="px-6 py-3">Phone</th>
+                  <th className="px-6 py-3">Blood Type</th>
+                  <th className="px-6 py-3">City</th>
+                  <th className="px-6 py-3">Last Donation</th>
+                  <th className="px-6 py-3 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {donors.map((donor, index) => (
-                  <tr key={donor._id} className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}>
-                    <td className="px-6 py-4 border-b">{donor.fullname}</td>
-                    <td className="px-6 py-4 border-b">{donor.blood}</td>
-                    <td className="px-6 py-4 border-b">{donor.city}</td>
-                    <td className="px-6 py-4 border-b">{donor.date}</td>
-                    <td className="px-6 py-4 border-b text-center">
+                {filteredDonors.map((donor) => (
+                  <tr key={donor._id} className="bg-white border-b hover:bg-gray-100">
+                    <td className="px-6 py-4 font-medium">{donor.fullname}</td>
+                    <td className="px-6 py-4">{donor.phone}</td>
+                    <td className="px-6 py-4">{donor.blood}</td>
+                    <td className="px-6 py-4">{donor.city}</td>
+                    <td className="px-6 py-4">{donor.date}</td>
+                    <td className="px-6 py-4 flex justify-center gap-4">
                       <button
-                        title="Tafatir"
-                        className="text-green-600 hover:text-green-800 mr-4"
-                        onClick={() => handleEdit(donor._id)}
+                        onClick={() => alert("Edit: " + donor._id)}
+                        className="text-blue-600 hover:text-blue-800"
+                        title="Edit"
                       >
                         <FaEdit />
                       </button>
                       <button
-                        title="Tirtir"
-                        className="text-red-600 hover:text-red-800"
                         onClick={() => handleDelete(donor._id)}
+                        className="text-red-600 hover:text-red-800"
+                        title="Delete"
                       >
                         <FaTrash />
                       </button>
@@ -141,77 +119,9 @@ function Donors() {
             </table>
           </div>
         )}
-
-        {/* Edit Modal */}
-        {isEditing && (
-          <div className="fixed inset-0 bg-red-200 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-              <h3 className="text-xl font-semibold mb-4 text-red-600">Update This Form</h3>
-
-              <label className="block mb-3">
-                FullName:
-                <input
-                  type="text"
-                  name="fullname"
-                  value={formData.fullname}
-                  onChange={handleChange}
-                  className="w-full mt-1 border rounded px-3 py-2"
-                />
-              </label>
-
-              <label className="block mb-3">
-                bloodGroup:
-                <input
-                  type="text"
-                  name="blood"
-                  value={formData.blood}
-                  onChange={handleChange}
-                  className="w-full mt-1 border rounded px-3 py-2"
-                />
-              </label>
-
-              <label className="block mb-3">
-                Town:
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className="w-full mt-1 border rounded px-3 py-2"
-                />
-              </label>
-
-              <label className="block mb-5">
-                Date:
-                <input
-                  type="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  className="w-full mt-1 border rounded px-3 py-2"
-                />
-              </label>
-
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={handleCancel}
-                  className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleUpdate}
-                  className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
-                >
-                  Update
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );
-}
+};
 
 export default Donors;
