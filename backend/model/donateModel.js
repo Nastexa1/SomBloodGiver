@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const donateSchema = mongoose.Schema({
+const donateSchema = new mongoose.Schema({
   fullname: {
     type: String,
     required: true,
@@ -23,8 +23,10 @@ const donateSchema = mongoose.Schema({
   },
   isDeleted: {
     type: Boolean,
-    default: false, // false = firfircoon, true = Recycle Bin
+    default: false, // false = active, true = Recycle Bin
   },
 });
 
-module.exports = mongoose.model("donate", donateSchema);
+const Donate = mongoose.model("Donate", donateSchema);
+
+export default Donate;
