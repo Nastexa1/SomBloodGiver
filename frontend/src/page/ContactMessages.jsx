@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
-import {
-  FaUser,
-  FaEnvelope,
-  FaCommentDots,
-  FaEdit,
-  FaTrash,
-} from "react-icons/fa";
+import { FaUser, FaEnvelope, FaCommentDots, FaEdit, FaTrash } from "react-icons/fa";
+
+const API_URL = "https://sombloodgiver-5.onrender.com"; // Live backend
 
 function ContactMessages() {
   const [messages, setMessages] = useState([]);
@@ -20,7 +16,7 @@ function ContactMessages() {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/getContact");
+      const res = await axios.get(`${API_URL}/getContact`);
       setMessages(res.data);
     } catch (error) {
       alert("Error fetching messages");
@@ -34,7 +30,7 @@ function ContactMessages() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this message?")) {
       try {
-        await axios.delete(`http://localhost:3000/removecontact/${id}`);
+        await axios.delete(`${API_URL}/removecontact/${id}`);
         fetchMessages();
       } catch (error) {
         alert("Error deleting message");
@@ -58,7 +54,7 @@ function ContactMessages() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:3000/put/${editingId}`, editFormData);
+      await axios.put(`${API_URL}/put/${editingId}`, editFormData);
       setEditingId(null);
       fetchMessages();
     } catch (error) {
@@ -66,9 +62,7 @@ function ContactMessages() {
     }
   };
 
-  const handleCancelEdit = () => {
-    setEditingId(null);
-  };
+  const handleCancelEdit = () => setEditingId(null);
 
   return (
     <>
@@ -86,7 +80,7 @@ function ContactMessages() {
               {messages.map((msg) => (
                 <div
                   key={msg._id}
-                  className="bg-white shadow-md  rounded-xl p-4 space-y-3 hover:shadow-lg transition-all"
+                  className="bg-white shadow-md rounded-xl p-4 space-y-3 hover:shadow-lg transition-all"
                 >
                   {editingId === msg._id ? (
                     <form onSubmit={handleEditSubmit} className="space-y-2">
@@ -139,8 +133,7 @@ function ContactMessages() {
                         <FaEnvelope className="text-blue-500 text-sm" /> {msg.Email}
                       </p>
                       <p className="text-gray-600 flex items-start gap-2 text-sm">
-                        <FaCommentDots className="text-green-500 mt-1 text-sm" />{" "}
-                        {msg.Fariin}
+                        <FaCommentDots className="text-green-500 mt-1 text-sm" /> {msg.Fariin}
                       </p>
 
                       <div className="flex justify-end gap-2 pt-3 border-t pt-2">
