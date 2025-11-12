@@ -1,26 +1,30 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const bcrypt = require("bcryptjs");
-const app = express();
-
-app.use(express.json());
-app.use(cors());
-
-// Connecting database
-mongoose.connect("mongodb://localhost:27017/donner").then(() => {
-  console.log("Database connected successfully");
-}).catch((error) => {
-  console.log(error);
-});
+// ----------------- IMPORTS -------------------
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import bcrypt from "bcryptjs";
 
 // MODELS
-const donateModel = require("./model/donateModel");
-const requastModel = require("./model/requastModel");
-const contactModel = require("./model/contactModel");
-const userModel = require("./model/userModel");
+import donateModel from "./model/donateModel.js";
+import requastModel from "./model/requastModel.js";
+import contactModel from "./model/contactModel.js";
+import userModel from "./model/userModel.js";
 
+// ----------------- INIT APP -------------------
+const app = express();
+app.use(express.json());
 
+// ----------------- CORS -------------------
+// Allow frontend Netlify domain only
+app.use(cors({
+  origin: "https://sombloodgiver.netlify.app",
+  methods: ["GET", "POST", "PUT", "DELETE"]
+}));
+
+// ----------------- DATABASE -------------------
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.error("MongoDB connection error:", err));
 
 // ----------------- ADMIN AUTH -------------------
 
@@ -30,9 +34,7 @@ app.post("/register", async (req, res) => {
     const { email, password } = req.body;
 
     const existingUser = await userModel.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
-    }
+    if (existingUser) return res.status(400).json({ message: "Email already exists" });
 
     const hashed = await bcrypt.hash(password, 10);
     const user = new userModel({ email, password: hashed });
@@ -44,25 +46,27 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
 // Admin Login
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await userModel.findOne({ email });
+  try {
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email });
+    if (!user) return res.status(404).json({ message: "Email not found" });
 
-  if (!user) return res.status(404).json({ message: "Email not found" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Incorrect password" });
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(401).json({ message: "Incorrect password" });
-
-  res.json({ message: "Login successful", user });
+    res.json({ message: "Login successful", user });
+  } catch (error) {
+    res.status(500).json({ message: "Login error", error: error.message });
+  }
 });
 
 // Update Password
 app.post("/update-password", async (req, res) => {
-  const { email, currentPassword, newPassword } = req.body;
-
   try {
+    const { email, currentPassword, newPassword } = req.body;
+
     const user = await userModel.findOne({ email });
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -81,19 +85,27 @@ app.post("/update-password", async (req, res) => {
 
 // ----------------- DONATE -------------------
 app.post("/create", async (req, res) => {
-  const newData = new donateModel(req.body);
-  const saveData = await newData.save();
-  if (saveData) res.send("Data has been saved");
+  try {
+    const newData = new donateModel(req.body);
+    await newData.save();
+    res.json({ message: "Data has been saved" });
+  } catch (error) {
+    res.status(500).json({ message: "Error saving data", error });
+  }
 });
 
 app.get("/get", async (req, res) => {
   const getdata = await donateModel.find();
-  res.send(getdata);
+  res.json(getdata);
 });
 
 app.put("/update/:id", async (req, res) => {
-  const updateData = await donateModel.updateOne({ _id: req.params.id }, { $set: req.body });
-  if (updateData) res.send("Data has been updated");
+  try {
+    await donateModel.updateOne({ _id: req.params.id }, { $set: req.body });
+    res.json({ message: "Data has been updated" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating data", error });
+  }
 });
 
 app.delete("/removedonateModel/:id", async (req, res) => {
@@ -105,22 +117,29 @@ app.delete("/removedonateModel/:id", async (req, res) => {
   }
 });
 
-
-// ----------------- REQUAST -------------------
+// ----------------- REQUEST -------------------
 app.post("/createRequest", async (req, res) => {
-  const newData = new requastModel(req.body);
-  const saveData = await newData.save();
-  if (saveData) res.send("Data has been saved");
+  try {
+    const newData = new requastModel(req.body);
+    await newData.save();
+    res.json({ message: "Request saved successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error saving request", error });
+  }
 });
 
 app.get("/getRequests", async (req, res) => {
   const getdata = await requastModel.find();
-  res.send(getdata);
+  res.json(getdata);
 });
 
 app.put("/updateRequest/:id", async (req, res) => {
-  const updateData = await requastModel.updateOne({ _id: req.params.id }, { $set: req.body });
-  if (updateData) res.send("Data has been updated");
+  try {
+    await requastModel.updateOne({ _id: req.params.id }, { $set: req.body });
+    res.json({ message: "Request updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating request", error });
+  }
 });
 
 app.delete("/removereq/:id", async (req, res) => {
@@ -134,20 +153,24 @@ app.delete("/removereq/:id", async (req, res) => {
 
 // ----------------- CONTACT -------------------
 app.post("/contact", async (req, res) => {
-  const newData = new contactModel(req.body);
-  const saveData = await newData.save();
-  if (saveData) res.send("Contact saved successfully");
+  try {
+    const newData = new contactModel(req.body);
+    await newData.save();
+    res.json({ message: "Contact saved successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error saving contact", error });
+  }
 });
 
 app.get("/getContact", async (req, res) => {
   const getdata = await contactModel.find();
-  res.send(getdata);
+  res.json(getdata);
 });
 
 app.put("/put/:id", async (req, res) => {
   try {
     const updated = await contactModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.status(200).json(updated);
+    res.json(updated);
   } catch (error) {
     res.status(500).json({ message: "Error updating contact", error });
   }
@@ -156,7 +179,7 @@ app.put("/put/:id", async (req, res) => {
 app.delete("/removecontact/:id", async (req, res) => {
   try {
     await contactModel.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Message deleted" });
+    res.json({ message: "Message deleted" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting message", error });
   }
@@ -166,9 +189,7 @@ app.delete("/removecontact/:id", async (req, res) => {
 app.get("/match-donors", async (req, res) => {
   const { blood, city } = req.query;
 
-  if (!blood || !city) {
-    return res.status(400).json({ message: "Blood and city required" });
-  }
+  if (!blood || !city) return res.status(400).json({ message: "Blood and city required" });
 
   try {
     const donors = await donateModel.find({ blood, city });
@@ -178,22 +199,21 @@ app.get("/match-donors", async (req, res) => {
   }
 });
 
-// ----------------- CHART DATA API -------------------
+// ----------------- CHART DATA -------------------
 app.get("/chart-data", async (req, res) => {
   try {
     const donations = await donateModel.find();
-
-    // Tirakoobka bisha
     const countByMonth = {};
+
     donations.forEach((donation) => {
-      const month = new Date(donation.date).toLocaleString("default", { month: "short" }); // Ex: "Jan"
+      const month = new Date(donation.date).toLocaleString("default", { month: "short" });
       countByMonth[month] = (countByMonth[month] || 0) + 1;
     });
 
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     const chartData = months.map((month) => ({
       month,
-      donations: countByMonth[month] || 0,
+      donations: countByMonth[month] || 0
     }));
 
     res.json(chartData);
@@ -202,8 +222,6 @@ app.get("/chart-data", async (req, res) => {
   }
 });
 
-
 // ----------------- RUN SERVER -------------------
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
