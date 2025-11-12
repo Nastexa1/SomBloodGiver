@@ -19,7 +19,8 @@ const Reports = () => {
   useEffect(() => {
     const fetchDonors = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/get");
+        // Live backend URL
+        const res = await axios.get("https://sombloodgiver-5.onrender.com/get");
         setDonors(res.data);
       } catch (err) {
         console.error("Failed to fetch donors");
@@ -77,7 +78,6 @@ const Reports = () => {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       <main className="flex-1 p-6 sm:p-10 ml-64 mt-20">
-        {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-red-600 text-center sm:text-left">
             📊 Blood Donor Reports
@@ -89,12 +89,10 @@ const Reports = () => {
           </NavLink>
         </div>
 
-        {/* Main Content */}
         {loading ? (
           <p className="text-center text-gray-500">Loading report...</p>
         ) : (
           <>
-            {/* Summary Boxes */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
               <div className="bg-white p-6 rounded shadow text-center">
                 <p className="text-gray-500">Total Donors</p>
@@ -112,7 +110,6 @@ const Reports = () => {
               </div>
             </div>
 
-            {/* Pie Chart */}
             <div className="bg-white rounded shadow p-6 mb-10">
               <h2 className="text-xl font-semibold mb-4">
                 Blood Type Distribution
@@ -124,51 +121,37 @@ const Reports = () => {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                      legend: {
-                        position: "bottom"
-                      }
+                      legend: { position: "bottom" }
                     }
                   }}
                 />
               </div>
             </div>
 
-            {/* Table Summary */}
-            {/* Table Summary */}
-<div className="bg-white p-6 rounded shadow mb-6 overflow-x-auto">
-  <h2 className="text-xl font-semibold mb-4">Blood Type Summary Table</h2>
-  <table className="w-full border text-sm table-auto">
-    <thead className="bg-red-500">
-      <tr>
-        <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider ">
-          Blood Type
-        </th>
-        <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider ">
-          Donor Count
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {Object.entries(bloodReport).map(([type, count], index) => (
-        <tr
-          key={type}
-          className={index % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-100"}
-        >
-          <td className="w-1/2 px-6 py-3 text-center text-gray-800 font-semibold border border-red-700">
-            {type}
-          </td>
-          <td className="w-1/2 px-6 py-3 text-center text-gray-900 font-bold border border-red-700">
-            {count}
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+            <div className="bg-white p-6 rounded shadow mb-6 overflow-x-auto">
+              <h2 className="text-xl font-semibold mb-4">Blood Type Summary Table</h2>
+              <table className="w-full border text-sm table-auto">
+                <thead className="bg-red-500">
+                  <tr>
+                    <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider">
+                      Blood Type
+                    </th>
+                    <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider">
+                      Donor Count
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(bloodReport).map(([type, count], index) => (
+                    <tr key={type} className={index % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-100"}>
+                      <td className="w-1/2 px-6 py-3 text-center text-gray-800 font-semibold border border-red-700">{type}</td>
+                      <td className="w-1/2 px-6 py-3 text-center text-gray-900 font-bold border border-red-700">{count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-
-
-            {/* 🟢 Download CSV Button - Bottom */}
             <div className="flex justify-end">
               <button
                 onClick={generateCSV}
