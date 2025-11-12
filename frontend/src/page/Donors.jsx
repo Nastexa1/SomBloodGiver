@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
-import {
-  FaEdit,
-  FaTrash,
-  FaDownload,
-} from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+const API_URL = "https://sombloodgiver-5.onrender.com"; // Live backend
 
 const Donors = () => {
   const [donors, setDonors] = useState([]);
@@ -17,7 +15,7 @@ const Donors = () => {
   useEffect(() => {
     const fetchDonors = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/get");
+        const res = await axios.get(`${API_URL}/get`);
         setDonors(res.data);
       } catch (err) {
         toast.error("Failed to fetch donors");
@@ -31,7 +29,7 @@ const Donors = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this donor?")) {
       try {
-        await axios.delete(`http://localhost:3000/removedonateModel/${id}`);
+        await axios.delete(`${API_URL}/removedonateModel/${id}`);
         setDonors((prev) => prev.filter((donor) => donor._id !== id));
         toast.success("Donor deleted successfully");
       } catch {
@@ -39,8 +37,6 @@ const Donors = () => {
       }
     }
   };
-
-  
 
   const filteredDonors = donors.filter((donor) =>
     donor.fullname.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -53,12 +49,11 @@ const Donors = () => {
       <Sidebar />
       <main className="flex-1 p-8 ml-64 mt-20">
         <ToastContainer />
-
         <h1 className="text-3xl font-bold text-red-600 mb-6 text-center">
           🩸 Blood Donors List (Table View)
         </h1>
 
-        {/* Search & CSV Download */}
+        {/* Search */}
         <div className="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <input
             type="text"
@@ -67,8 +62,6 @@ const Donors = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-
-         
         </div>
 
         {/* Donors Table */}
