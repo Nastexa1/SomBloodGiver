@@ -17,7 +17,7 @@ const RequestReports = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/getRequests");
+        const res = await axios.get("https://sombloodgiver-5.onrender.com/getRequests");
         setRequests(res.data);
       } catch (err) {
         console.error("Failed to fetch requests");
@@ -117,37 +117,36 @@ const RequestReports = () => {
             </div>
 
             {/* Summary Table */}
-          <div className="bg-white p-6 rounded shadow mb-6 overflow-x-auto">
-  <h2 className="text-xl font-semibold mb-4">Blood Type Summary Table</h2>
-  <table className="w-full border text-sm table-auto">
-    <thead className="bg-red-500">
-      <tr>
-        <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider">
-          Blood Type
-        </th>
-        <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider">
-          Request Count
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {Object.entries(bloodStats).map(([type, count], index) => (
-        <tr
-          key={type}
-          className={index % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-100"}
-        >
-          <td className="w-1/2 px-6 py-3 text-center text-gray-800 font-semibold border border-red-700">
-            {type}
-          </td>
-          <td className="w-1/2 px-6 py-3 text-center text-gray-900 font-bold border border-red-700">
-            {count}
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
+            <div className="bg-white p-6 rounded shadow mb-6 overflow-x-auto">
+              <h2 className="text-xl font-semibold mb-4">Blood Type Summary Table</h2>
+              <table className="w-full border text-sm table-auto">
+                <thead className="bg-red-500">
+                  <tr>
+                    <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider">
+                      Blood Type
+                    </th>
+                    <th className="w-1/2 px-6 py-3 text-center font-medium text-white uppercase tracking-wider">
+                      Request Count
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(bloodStats).map(([type, count], index) => (
+                    <tr
+                      key={type}
+                      className={index % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-gray-100"}
+                    >
+                      <td className="w-1/2 px-6 py-3 text-center text-gray-800 font-semibold border border-red-700">
+                        {type}
+                      </td>
+                      <td className="w-1/2 px-6 py-3 text-center text-gray-900 font-bold border border-red-700">
+                        {count}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             {/* Download CSV */}
             <button
