@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import Footer from "../components/Footer";
 
+const API_URL = "https://sombloodgiver-5.onrender.com"; // Live backend
+
 const Donate = () => {
   const [formData, setFormData] = useState({
     fullname: "",
@@ -22,7 +24,7 @@ const Donate = () => {
       return;
     }
 
-    // Prevent letters in phonepl
+    // Prevent letters in phone
     if (name === "phone" && /[^0-9]/.test(value)) {
       return;
     }
@@ -38,7 +40,7 @@ const Donate = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3000/create", formData);
+      await axios.post(`${API_URL}/create`, formData);
       alert("Your information has been saved successfully.");
       setFormData({
         fullname: "",
