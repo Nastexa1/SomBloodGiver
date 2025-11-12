@@ -25,9 +25,11 @@ const Dashboard = () => {
   ];
 
   useEffect(() => {
+    const baseURL = "https://sombloodgiver-5.onrender.com"; // Live server URL
+
     const fetchDonors = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/get");
+        const { data } = await axios.get(`${baseURL}/get`);
         setDonors(data);
       } catch (error) {
         console.error("Error fetching donors:", error);
@@ -36,7 +38,7 @@ const Dashboard = () => {
 
     const fetchRequests = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/getRequests");
+        const { data } = await axios.get(`${baseURL}/getRequests`);
         setRequests(data);
       } catch (error) {
         console.error("Error fetching requests:", error);
@@ -45,7 +47,7 @@ const Dashboard = () => {
 
     const fetchMessages = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/getContact");
+        const { data } = await axios.get(`${baseURL}/getContact`);
         setMessages(data);
       } catch (error) {
         console.error("Error fetching contact messages:", error);
@@ -104,46 +106,45 @@ const Dashboard = () => {
           ))}
         </div>
 
-       {/* Bar Chart */}
-<section className="bg-gradient-to-br from-white to-red-50 rounded-2xl shadow-xl mx-auto  border border-red-200 max-w-5xl">
-  <h3 className="text-2xl font-bold text-red-700 mb-6 text-center tracking-wide uppercase">
-   SomB Giver Statistics
-  </h3>
+        {/* Bar Chart */}
+        <section className="bg-gradient-to-br from-white to-red-50 rounded-2xl shadow-xl mx-auto  border border-red-200 max-w-5xl">
+          <h3 className="text-2xl font-bold text-red-700 mb-6 text-center tracking-wide uppercase">
+            SomB Giver Statistics
+          </h3>
 
-  <ResponsiveContainer width="100%" height={250}>
-    <BarChart
-      data={chartData}
-      margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
-    >
-      <CartesianGrid strokeDasharray="4 4" stroke="#fecaca" />
-      <XAxis dataKey="name" stroke="#b91c1c" tick={{ fontSize: 14 }} />
-      <YAxis stroke="#b91c1c" tick={{ fontSize: 14 }} />
-      <Tooltip
-        contentStyle={{
-          backgroundColor: "#fef2f2",
-          borderColor: "#fecaca",
-          borderRadius: "10px",
-          fontSize: "14px",
-        }}
-        itemStyle={{ color: "#b91c1c", fontWeight: "bold" }}
-        cursor={{ fill: "#fee2e2" }}
-      />
-      <Bar
-        dataKey="value"
-        fill="#dc2626"
-        radius={[10, 10, 0, 0]}
-        barSize={45}
-        label={{
-          position: "top",
-          fill: "#991b1b",
-          fontSize: 13,
-          fontWeight: 600,
-        }}
-      />
-    </BarChart>
-  </ResponsiveContainer>
-</section>
-
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 10, bottom: 10 }}
+            >
+              <CartesianGrid strokeDasharray="4 4" stroke="#fecaca" />
+              <XAxis dataKey="name" stroke="#b91c1c" tick={{ fontSize: 14 }} />
+              <YAxis stroke="#b91c1c" tick={{ fontSize: 14 }} />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#fef2f2",
+                  borderColor: "#fecaca",
+                  borderRadius: "10px",
+                  fontSize: "14px",
+                }}
+                itemStyle={{ color: "#b91c1c", fontWeight: "bold" }}
+                cursor={{ fill: "#fee2e2" }}
+              />
+              <Bar
+                dataKey="value"
+                fill="#dc2626"
+                radius={[10, 10, 0, 0]}
+                barSize={45}
+                label={{
+                  position: "top",
+                  fill: "#991b1b",
+                  fontSize: 13,
+                  fontWeight: 600,
+                }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </section>
       </main>
     </div>
   );
