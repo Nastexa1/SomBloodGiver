@@ -14,7 +14,8 @@ function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/register", {
+      // Ku xir live backend
+      const res = await axios.post("https://sombloodgiver-5.onrender.com/register", {
         email: form.email,
         password: form.password,
       });
@@ -75,12 +76,10 @@ function RegisterForm() {
           </button>
         </form>
 
-        {/* Show success message */}
         {message && (
           <p className="mt-4 text-center text-sm text-green-600">{message}</p>
         )}
 
-        {/* Login link */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
