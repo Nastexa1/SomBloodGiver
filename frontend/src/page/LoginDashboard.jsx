@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+const API_URL = "https://sombloodgiver-5.onrender.com"; // live backend
+
 function LoginDashboard({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +16,7 @@ function LoginDashboard({ setIsAuthenticated }) {
     setErrorMsg("");
 
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -87,7 +89,6 @@ function LoginDashboard({ setIsAuthenticated }) {
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        {/* Register Link */}
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
