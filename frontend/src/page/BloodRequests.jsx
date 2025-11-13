@@ -6,7 +6,7 @@ import {
 } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 
-const API_URL = "https://sombloodgiver-5.onrender.com"; // Live backend URL
+const API_URL = "https://sombloodgiver-8.onrender.com"; // Live backend URL
 
 const BloodRequests = () => {
   const [requests, setRequests] = useState([]);
