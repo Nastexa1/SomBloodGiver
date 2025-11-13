@@ -20,7 +20,7 @@ const Reports = () => {
     const fetchDonors = async () => {
       try {
         // Live backend URL
-        const res = await axios.get("https://sombloodgiver-5.onrender.com/get");
+        const res = await axios.get("https://sombloodgiver-8.onrender.com/get");
         setDonors(res.data);
       } catch (err) {
         console.error("Failed to fetch donors");
