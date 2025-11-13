@@ -26,7 +26,7 @@ const Request = () => {
     setNoDonorsMessage("");
 
     try {
-      const res = await axios.get("https://sombloodgiver-5.onrender.com/match-donors", {
+      const res = await axios.get("https://sombloodgiver-8.onrender.com/match-donors", {
         params: { blood, city },
       });
       const donors = res.data || [];
@@ -59,7 +59,7 @@ const Request = () => {
 
     try {
       // Live backend URL
-      await axios.post("https://sombloodgiver-5.onrender.com/createRequest", formData);
+      await axios.post("https://sombloodgiver-8.onrender.com/createRequest", formData);
       fetchMatchedDonors(blood, city);
       setFormData({
         patientName: "",
