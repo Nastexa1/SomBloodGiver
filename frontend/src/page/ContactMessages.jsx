@@ -3,7 +3,7 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { FaUser, FaEnvelope, FaCommentDots, FaEdit, FaTrash } from "react-icons/fa";
 
-const API_URL = "https://sombloodgiver-5.onrender.com"; // Live backend
+const API_URL = "https://sombloodgiver-8.onrender.com"; // Live backend
 
 function ContactMessages() {
   const [messages, setMessages] = useState([]);
