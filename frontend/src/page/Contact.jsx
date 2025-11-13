@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Footer from "../components/Footer";
 
-const API_URL = "https://sombloodgiver-5.onrender.com"; // Live backend
+const API_URL = "https://sombloodgiver-8.onrender.com"; // Live backend
 
 function Contact() {
   const [formData, setFormData] = useState({
