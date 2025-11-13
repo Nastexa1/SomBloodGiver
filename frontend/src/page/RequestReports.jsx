@@ -17,7 +17,7 @@ const RequestReports = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const res = await axios.get("https://sombloodgiver-5.onrender.com/getRequests");
+        const res = await axios.get("https://sombloodgiver-8.onrender.com/getRequests");
         setRequests(res.data);
       } catch (err) {
         console.error("Failed to fetch requests");
