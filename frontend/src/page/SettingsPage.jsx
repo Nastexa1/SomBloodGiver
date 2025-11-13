@@ -52,7 +52,7 @@ function SettingsPage() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://sombloodgiver-5.onrender.com/update-password",
+        "https://sombloodgiver-8.onrender.com/update-password",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
