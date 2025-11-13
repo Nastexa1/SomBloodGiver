@@ -15,7 +15,7 @@ function RegisterForm() {
     e.preventDefault();
     try {
       // Ku xir live backend
-      const res = await axios.post("https://sombloodgiver-5.onrender.com/register", {
+      const res = await axios.post("https://sombloodgiver-8.onrender.com/register", {
         email: form.email,
         password: form.password,
       });
